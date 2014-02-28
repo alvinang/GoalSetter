@@ -41,3 +41,9 @@ RSpec.configure do |config|
   #     --seed 1234
   # config.order = "random"
 end
+
+def login!(btn)
+  fill_in 'Username', with: 'hello_world'
+  fill_in 'Password', with: 'password'
+  click_button "#{btn}"
+end
