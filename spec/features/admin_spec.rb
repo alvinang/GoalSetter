@@ -2,12 +2,45 @@ require 'spec_helper'
 
 feature "admin powers" do
 
-  it "can edit any user's goal"
+  before(:each) do
+    User.create!(username: "non_admin", password: "password", admin: false)
+    non_admin = User.last
 
-  it "can delete any non-admin users"
+    User.create!(username: "admin", password: "password", admin: true)
+    visit new_session_url
 
-  it "can view private goals"
+    fill_in 'Username', with: 'admin'
+    fill_in 'Password', with: 'password'
+    click_button "Sign In"
+  end
 
+  it "can delete non-admin users" do
+    visit user_url(non_admin)
 
+    expect(page).to have_button 'Remove Account'
+  end
+
+  it "can delete other admin users" do
+    User.create!(username: "admin", password: "password", admin: true)
+    new_admin = User.last
+    visit user_url(new_admin)
+
+    expect(page).to have_button 'Remove Account'
+  end
+
+  it "can view private goals" do
+    non_admin.goals.create!(username: "Private Goal", private: true)
+
+    visit user_url(non_admin)
+    expect(page).to have_content "Private Goal"
+  end
+
+  it "can delete any user's goal" do
+    non_admin.goals.create!(username: "Any user goal")
+
+    visit user_url(non_admin)
+    click_button 'Remove Goal'
+    expect(page).not_to have_content 'Any user goal'
+  end
 
 end
