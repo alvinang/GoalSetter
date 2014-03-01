@@ -2,10 +2,8 @@ require 'spec_helper'
 
 feature "admin powers" do
 
+  let(:non_admin) { User.create!(username: "non_admin", password: "password", admin: false) }
   before(:each) do
-    User.create!(username: "non_admin", password: "password", admin: false)
-    non_admin = User.last
-
     User.create!(username: "admin", password: "password", admin: true)
     visit new_session_url
 
@@ -21,7 +19,7 @@ feature "admin powers" do
   end
 
   it "can delete other admin users" do
-    User.create!(username: "admin", password: "password", admin: true)
+    User.create(username: "new_admin", password: "password", admin: true)
     new_admin = User.last
     visit user_url(new_admin)
 
@@ -29,14 +27,14 @@ feature "admin powers" do
   end
 
   it "can view private goals" do
-    non_admin.goals.create!(username: "Private Goal", private: true)
+    non_admin.goals.create(name: "Private Goal", private: true)
 
     visit user_url(non_admin)
     expect(page).to have_content "Private Goal"
   end
 
   it "can delete any user's goal" do
-    non_admin.goals.create!(username: "Any user goal")
+    non_admin.goals.create(name: "Any user goal")
 
     visit user_url(non_admin)
     click_button 'Remove Goal'

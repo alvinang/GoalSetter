@@ -1,6 +1,11 @@
 class UsersController < ApplicationController
 
-  before_action :check_logged_in, only: :show
+  before_action :check_logged_in, only: [:show, :index]
+
+  def index
+    @users = User.all
+    render :index
+  end
 
   def new
     @user = User.new
@@ -23,6 +28,12 @@ class UsersController < ApplicationController
   def show
     @user = User.find(params[:id])
     render :show
+  end
+
+  def destroy
+    user = User.find(params[:id])
+    user.destroy
+    redirect_to users_url
   end
 
   private

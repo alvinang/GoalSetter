@@ -27,7 +27,7 @@ class GoalsController < ApplicationController
     @goal = Goal.find(params[:id])
 
     if @goal.update_attributes(goal_params)
-      redirect_to user_url(current_user)
+      redirect_to user_url(@goal.user)
     else
       flash.now[:errors] = @goal.errors.full_messages
       render :edit
@@ -36,8 +36,9 @@ class GoalsController < ApplicationController
 
   def destroy
     goal = Goal.find(params[:id])
+    user = goal.user
     goal.destroy!
-    redirect_to user_url(current_user)
+    redirect_to user_url(user)
   end
 
   def index

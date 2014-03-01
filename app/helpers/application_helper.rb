@@ -9,4 +9,11 @@ module ApplicationHelper
     !!current_user
   end
 
+  def admin?
+    current_user.admin
+  end
+
+  def privileged?(user)
+    admin? || current_user.id == user.id
+  end
 end

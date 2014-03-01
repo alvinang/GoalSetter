@@ -8,17 +8,17 @@
 #  token           :string(255)
 #  created_at      :datetime
 #  updated_at      :datetime
+#  admin           :boolean
 #
 
 class User < ActiveRecord::Base
+  attr_reader :password
   validates :username, :password_digest, :token, :presence => true
   validates :password, :length => { minimum: 6, allow_nil: true }
   validates :username, :token, :uniqueness => true
-  attr_reader :password
 
   has_many :goals, :inverse_of => :user
-
-  before_validation :set_token
+  before_validation :set_token, :admin_default
 
   def password=(password)
     @password = password
@@ -48,5 +48,10 @@ class User < ActiveRecord::Base
 
     def set_token
       self.token ||= User.generate_token
+    end
+
+    def admin_default
+      self.admin ||= false
+      true
     end
 end

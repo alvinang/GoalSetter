@@ -2,17 +2,31 @@
 
 <ul>
   <% @user.goals.each do |goal| %>
-  <% next if goal.private && current_user.id != @user.id %>
+  <% next if goal.private && !privileged?(@user) %>
+
   <li>
     <div class="goal-item">
+      <% disabled = !privileged?(@user) %>
       <% btn_class = goal.completed ? "btn-complete" : "btn-incomplete" %>
-      <%= button_to "&#10003;".html_safe, complete_goal_url(goal), class: btn_class %>
+
+      <%= button_to "&#10003;".html_safe, complete_goal_url(goal),
+        class: btn_class, disabled: disabled %>
+
       <%= goal.name %>
-      <%= link_to "Edit", edit_goal_url(goal) %>
-      <%= button_to "Remove Goal", goal_url(goal), method: :delete %>
+
+      <% if privileged?(@user) %>
+        <%= link_to "Edit", edit_goal_url(goal) %>
+        <%= button_to "Remove Goal", goal_url(goal), method: :delete %>
+      <% end %>
     </div>
   </li>
   <% end %>
 </ul>
 
-<%= link_to 'Add New Goal', new_goal_url %>
+<% if privileged?(@user) %>
+  <%= button_to 'Remove Account', user_url(@user), method: :delete %>
+<% end  %>
+
+<% if current_user.id == @user.id %>
+  <%= link_to 'Add New Goal', new_goal_url %>
+<% end %>
