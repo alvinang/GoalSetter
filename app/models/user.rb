@@ -16,6 +16,8 @@ class User < ActiveRecord::Base
   validates :username, :token, :uniqueness => true
   attr_reader :password
 
+  has_many :goals, :inverse_of => :user
+
   before_validation :set_token
 
   def password=(password)
@@ -39,7 +41,6 @@ class User < ActiveRecord::Base
 
   def self.find_by_credentials(username, password)
     user = User.find_by(username: username)
-
     user && user.is_password?(password) ? user : nil
   end
 

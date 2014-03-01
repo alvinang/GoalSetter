@@ -1,3 +1,29 @@
 // Place all the styles related to the users controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+
+ul {
+  list-style: none;
+}
+
+div.goal-item {
+  display: inline-block;
+  *{
+    display: inline;
+  }
+  input {
+    border-radius: 5px;
+    border: 0;
+    display: inline;
+  }
+}
+
+.btn-complete {
+  background: orange;
+  color: white;
+}
+
+.btn-incomplete {
+  background: gray;
+  color: white;
+}

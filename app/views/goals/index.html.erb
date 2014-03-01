@@ -1,0 +1,12 @@
+All Goals
+
+<ul>
+  <% @goals.each do |goal| %>
+  <li>
+    <%= goal.name %>
+    <% if goal.user_id == current_user.id %>
+      <%= link_to "Edit", edit_goal_url(goal) %>
+    <% end %>
+  </li>
+  <% end %>
+</ul>

@@ -1,1 +1,18 @@
-<h1>Show User</h1>
+<h1>Goals for <%= @user.username %></h1>
+
+<ul>
+  <% @user.goals.each do |goal| %>
+  <% next if goal.private && current_user.id != @user.id %>
+  <li>
+    <div class="goal-item">
+      <% btn_class = goal.completed ? "btn-complete" : "btn-incomplete" %>
+      <%= button_to "&#10003;".html_safe, complete_goal_url(goal), class: btn_class %>
+      <%= goal.name %>
+      <%= link_to "Edit", edit_goal_url(goal) %>
+      <%= button_to "Remove Goal", goal_url(goal), method: :delete %>
+    </div>
+  </li>
+  <% end %>
+</ul>
+
+<%= link_to 'Add New Goal', new_goal_url %>
